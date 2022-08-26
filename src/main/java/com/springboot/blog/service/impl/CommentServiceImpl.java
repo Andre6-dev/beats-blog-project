@@ -10,6 +10,9 @@ import com.springboot.blog.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -32,6 +35,15 @@ public class CommentServiceImpl implements CommentService {
         Comment newComment = commentRepository.save(comment);
 
         return mapToDTO(newComment);
+    }
+
+    @Override
+    public List<CommentDto> getCommentsByPostId(long postId) {
+        // Retrieve comments by postId
+        List<Comment> comments = commentRepository.findByPostId(postId);
+
+        // Convert list of comments to list of commentDTOs
+        return comments.stream().map(comment -> mapToDTO(comment)).collect(Collectors.toList());
     }
 
     private CommentDto mapToDTO(Comment comment) {
